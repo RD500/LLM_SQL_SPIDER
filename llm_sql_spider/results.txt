@@ -1,0 +1,100 @@
+Question 1: How many heads of the departments are older than 56 ?
+Actual SQL query: SELECT count(*) FROM head WHERE age  >  56
+Generated SQL query: SELECT COUNT(*) FROM head WHERE age > 56;
+Query similarity: 92.86%
+Results match: True
+Generated result: [(5,)]
+Actual result: [(5,)]
+
+Question 2: List the name, born state and age of the heads of departments ordered by age.
+Actual SQL query: SELECT name ,  born_state ,  age FROM head ORDER BY age
+Generated SQL query: SELECT name, born_state, age FROM head JOIN management ON head._id = management._head_ID ORDER BY age;
+Query similarity: 46.08%
+Error executing SQL: no such column: head._id
+
+Question 3: List the creation year, name and budget of each department.
+Actual SQL query: SELECT creation ,  name ,  budget_in_billions FROM department
+Generated SQL query: SELECT department.Creation, department.Name, department.Budget_in_Billions FROM department;
+Query similarity: 60.44%
+Results match: True
+Generated result: [('1789', 'State', 9.96), ('1789', 'Treasury', 11.1), ('1947', 'Defense', 439.3), ('1870', 'Justice', 23.4), ('1849', 'Interior', 10.7), ('1889', 'Agriculture', 77.6), ('1903', 'Commerce', 6.2), ('1913', 'Labor', 59.7), ('1953', 'Health and Human Services', 543.2), ('1965', 'Housing and Urban Development', 46.2), ('1966', 'Transportation', 58.0), ('1977', 'Energy', 21.5), ('1979', 'Education', 62.8), ('1989', 'Veterans Affairs', 73.2), ('2002', 'Homeland Security', 44.6)]
+Actual result: [('1789', 'State', 9.96), ('1789', 'Treasury', 11.1), ('1947', 'Defense', 439.3), ('1870', 'Justice', 23.4), ('1849', 'Interior', 10.7), ('1889', 'Agriculture', 77.6), ('1903', 'Commerce', 6.2), ('1913', 'Labor', 59.7), ('1953', 'Health and Human Services', 543.2), ('1965', 'Housing and Urban Development', 46.2), ('1966', 'Transportation', 58.0), ('1977', 'Energy', 21.5), ('1979', 'Education', 62.8), ('1989', 'Veterans Affairs', 73.2), ('2002', 'Homeland Security', 44.6)]
+
+Question 4: What are the maximum and minimum budget of the departments?
+Actual SQL query: SELECT max(budget_in_billions) ,  min(budget_in_billions) FROM department
+Generated SQL query: SELECT max(Budget_in_Billions), min(Budget_in_Billions) FROM department;
+Query similarity: 95.89%
+Results match: True
+Generated result: [(543.2, 6.2)]
+Actual result: [(543.2, 6.2)]
+
+Question 5: What is the average number of employees of the departments whose rank is between 10 and 15?
+Actual SQL query: SELECT avg(num_employees) FROM department WHERE ranking BETWEEN 10 AND 15
+Generated SQL query: SELECT AVG(num_employees) FROM department WHERE Ranking BETWEEN 10 AND 15;
+Query similarity: 98.65%
+Results match: True
+Generated result: [(105468.16666666667,)]
+Actual result: [(105468.16666666667,)]
+
+Question 6: What are the names of the heads who are born outside the California state?
+Actual SQL query: SELECT name FROM head WHERE born_state != 'California'
+Generated SQL query: SELECT name FROM head WHERE born_state != 'California';
+Query similarity: 98.18%
+Results match: True
+Generated result: [('Tiger Woods',), ('K. J. Choi',), ('Jeff Maggert',), ('Stewart Cink',), ('Pádraig Harrington',), ('Franklin Langham',)]
+Actual result: [('Tiger Woods',), ('K. J. Choi',), ('Jeff Maggert',), ('Stewart Cink',), ('Pádraig Harrington',), ('Franklin Langham',)]
+
+Question 7: What are the distinct creation years of the departments managed by a secretary born in state 'Alabama'?
+Actual SQL query: SELECT DISTINCT T1.creation FROM department AS T1 JOIN management AS T2 ON T1.department_id  =  T2.department_id JOIN head AS T3 ON T2.head_id  =  T3.head_id WHERE T3.born_state  =  'Alabama'
+Generated SQL query: SELECT DISTINCT department.Creation FROM management INNER JOIN department ON management.department_ID = department.Department_ID INNER JOIN head ON management.head_ID = head.head_ID WHERE head.born_state = 'Alabama';
+Query similarity: 64.81%
+Results match: True
+Generated result: [('1903',)]
+Actual result: [('1903',)]
+
+Question 8: What are the names of the states where at least 3 heads were born?
+Actual SQL query: SELECT born_state FROM head GROUP BY born_state HAVING count(*)  >=  3
+Generated SQL query: SELECT born_state FROM head GROUP BY born_state HAVING COUNT(*) >= 3;
+Query similarity: 95.71%
+Results match: True
+Generated result: [('California',)]
+Actual result: [('California',)]
+
+Question 9: In which year were most departments established?
+Actual SQL query: SELECT creation FROM department GROUP BY creation ORDER BY count(*) DESC LIMIT 1
+Generated SQL query: SELECT MAX(STRFTIME('%Y', Creation)) as Year_with_Most_Departments
+   FROM department;
+Query similarity: 23.26%
+Results match: False
+Generated result: [('-4708',)]
+Actual result: [('1789',)]
+
+Question 10: Show the name and number of employees for the departments managed by heads whose temporary acting value is 'Yes'?
+Actual SQL query: SELECT T1.name ,  T1.num_employees FROM department AS T1 JOIN management AS T2 ON T1.department_id  =  T2.department_id WHERE T2.temporary_acting  =  'Yes'
+Generated SQL query: SELECT department.Name, department.Num_Employees FROM department JOIN management ON department.Department_ID = management.department_ID JOIN head ON management.head_ID = head.head_ID WHERE head.temporary_acting = 'Yes';
+Query similarity: 53.42%
+Error executing SQL: no such column: head.temporary_acting
+
+Overall Results:
+Total Queries: 10
+Correct Queries: 7
+Accuracy: 70.00%
+Average Query Similarity: 72.93%
+
+Error Types:
+no such column: 2 (20.00%)
+Incorrect Result: 1 (10.00%)
+
+Best Performing Query:
+Question: What is the average number of employees of the departments whose rank is between 10 and 15?
+Generated Query: SELECT AVG(num_employees) FROM department WHERE Ranking BETWEEN 10 AND 15;
+Actual Query: SELECT avg(num_employees) FROM department WHERE ranking BETWEEN 10 AND 15
+Similarity: 98.65%
+
+Worst Performing Query:
+Question: In which year were most departments established?
+Generated Query: SELECT MAX(STRFTIME('%Y', Creation)) as Year_with_Most_Departments
+   FROM department;
+Actual Query: SELECT creation FROM department GROUP BY creation ORDER BY count(*) DESC LIMIT 1
+Similarity: 23.26%
+(venv) suman@in-geogo-ccu-gpu-t3:~/rakshitha/rakshitha/rotation2/llm_sql_spider$ 
