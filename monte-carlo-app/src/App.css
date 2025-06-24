@@ -1,4 +1,4 @@
-/* Base styles */
+
 * {
   margin: 0;
   padding: 0;
@@ -278,8 +278,9 @@ body {
 }
 
 .aspect-square {
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 1;
 }
+
 
 /* Flexbox utilities */
 .items-center {
